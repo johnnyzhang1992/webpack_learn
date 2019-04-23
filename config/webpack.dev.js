@@ -2,7 +2,8 @@ const merge = require("webpack-merge");
 const base = require("./webpack.base");
 const webpack = require("webpack");
 
-module.exports = merge(base ,{
+module.exports = merge(base, {
+    // 模式
     mode: 'development',
     devtool: 'source-map',
     // @ts-ignore

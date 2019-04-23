@@ -32,7 +32,7 @@ module.exports = {
     },
     plugins:[
         new HtmlWebpackPlugin({
-            title:'WebpackTest'
+            title:'Webpack 项目搭建学习'
         })
     ]
 }
