@@ -41,8 +41,22 @@ module.exports = {
     },
     plugins:[
         new HtmlWebpackPlugin({
-            title: 'Webpack 项目搭建学习',
-            template: './src/index.html'
+            //  在 html 页面配合使用 <%= htmlWebpackPlugin.options.title %>
+            title: 'Base Mode',
+            template: './src/index.html',
+            // file name
+            //filename: 'index.[contenthash].html',
+            // add meta
+            meta: {
+                viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
+                keywords: 'webpack, Javascript',
+                description: 'webpack learn, 学习 webpack 的配置'
+            },
+            chunksSortMode: 'auto',
+            // favicon: ''
         })
+        // The title to use for the generated HTML document. 
+        // 用于自动生成的默认 html,对指定 template 的无效果
+        // new HtmlWebpackPlugin({title: 'Webpack 项目搭建学习'})
     ]
 }

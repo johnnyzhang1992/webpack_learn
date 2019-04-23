@@ -5,8 +5,7 @@ import { cube} from '../untils/math'
 // 创建组件
 function createComponent(){
     var element = document.createElement('div');
-    element.innerHTML = `hello webpack!
-    5 is equal to ${cube(5)}`;
+    element.innerHTML = `5 is equal to ${cube(5)}`;
     return element; 
 }
 // 创建图片元素
