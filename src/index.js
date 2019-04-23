@@ -1,10 +1,12 @@
 import "./style.css"
 import imgUrl from "./img.png"
+import { cube} from '../untils/math'
 // import Styles from 'style-loader!css-loader?modules!./styles.css';
 // 创建组件
 function createComponent(){
     var element = document.createElement('div');
-    element.innerHTML = 'hello webpack';
+    element.innerHTML = `hello webpack!
+    5 is equal to ${cube(5)}`;
     return element; 
 }
 // 创建图片元素

@@ -106,3 +106,45 @@ webpack --mode=production
 | ----| ---- |
 |   development   |  production    |
 |  会将 `process.env.NODE_ENV` 的值设为 `development`。启用 `NamedChunksPlugin` 和 `NamedModulesPlugin`。    |   会将 `process.env.NODE_ENV` 的值设为 `production`。启用 `FlagDependencyUsagePlugin, FlagIncludedChunksPlugin, ModuleConcatenationPlugin, NoEmitOnErrorsPlugin, OccurrenceOrderPlugin, SideEffectsFlagPlugin 和 UglifyJsPlugin`.   |
+
+### tree shaking
+
+tree shaking 是一个术语，通常用于描述移除 JavaScript 上下文中的未引用代码(dead-code)。它依赖于 ES2015 模块系统中的静态结构特性，例如 import 和 export。这个术语和概念实际上是兴起于 ES2015 模块打包工具 rollup。
+
+新的 webpack 4 正式版本，扩展了这个检测能力，通过 package.json 的 "sideEffects" 属性作为标记，向 compiler 提供提示，表明项目中的哪些文件是 "pure(纯的 ES2015 模块)"，由此可以安全地删除文件中未使用的部分。
+
+#### 将文件标记为无副作用(side-effect-free)
+
+这种方式是通过 package.json 的 "sideEffects" 属性来实现的。
+
+``` json
+
+{
+  "name": "your-project",
+  "sideEffects": false
+}
+```
+
+如果你的代码确实有一些副作用，那么可以改为提供一个数组：
+
+``` json
+{
+  "name": "your-project",
+  "sideEffects": [
+    "./untils/math.js",
+    "*.css"
+  ]
+}
+```
+
+最后，还可以在 module.rules 配置选项 中设置 "sideEffects"。
+
+``` js
+module.rules: [
+  {
+    include: path.resolve("node_modules", "lodash"),
+    sideEffects: false
+  }
+]
+```
+

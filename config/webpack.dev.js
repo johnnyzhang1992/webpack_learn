@@ -5,7 +5,8 @@ const webpack = require("webpack");
 module.exports = merge(base, {
     // 模式
     mode: 'development',
-    devtool: 'source-map',
+    target: 'web',
+    devtool: 'inline-source-map',
     // @ts-ignore
     devServer:{
         compress: true, //启用压缩
