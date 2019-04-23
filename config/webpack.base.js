@@ -17,7 +17,7 @@ module.exports = {
     optimization: {
         splitChunks: {
             chunks: 'async',
-            minSize: 10000,
+            minSize: 30000,
             minChunks: 1,
             maxAsyncRequests: 5,
             maxInitialRequests: 3,
@@ -25,11 +25,13 @@ module.exports = {
             name: true,
             // 公共模块被打包进了commons
             cacheGroups: {
-                 commons: {
-                     name: 'commons',
-                     chunks: 'all',
-                     minChunks: 2
-                 }
+                // 禁用 default 缓存组
+                //default: false
+                commons: {
+                    name: 'commons',
+                    chunks: 'all',
+                    minChunks: 2
+                }
             }
         }     
     },

@@ -170,3 +170,136 @@ module.exports = {
   ]
 }
 ```
+
+### webpack SplitChunksPlugin
+
+首先webpack会根据下述条件自动进行代码块分割：
+
+- 新代码块可以被共享引用，或者这些模块都是来自node_modules文件夹里面
+- 新代码块大于30kb（min+gziped之前的体积）
+- 按需加载的代码块，并行请求最大数量应该小于或者等于5
+- 初始加载的代码块，并行请求最大数量应该小于或等于3
+
+#### 配置项
+
+相关配置项：
+
+``` js
+module.exports = {
+  //...
+  optimization: {
+    splitChunks: {
+      chunks: 'async', 
+      minSize: 30000,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~', 
+      name: true,
+      cacheGroups: {}
+    }
+  }
+}
+```
+
+- chunks: 表示哪些代码需要优化，有三个可选值：initial(初始块)、async(按需加载块)、all(全部块)，默认为async
+- minSize: 表示在压缩前的最小模块大小，默认为30000
+- minChunks: 表示被引用次数，默认为1
+- maxAsyncRequests: 按需加载时候最大的并行请求数，默认为5
+- maxInitialRequests: 一个入口最大的并行请求数，默认为3
+- automaticNameDelimiter: 命名连接符
+- name: 拆分出来块的名字，默认由块名和hash值自动生成
+- cacheGroups: 缓存组。缓存组的属性除上面所有属性外，还有test, priority, reuseExistingChunk
+
+- test: 用于控制哪些模块被这个缓存组匹配到
+- priority: 缓存组打包的先后优先级
+- reuseExistingChunk: 如果当前代码块包含的模块已经有了，就不在产生一个新的代码块
+
+配置项基本就上面这些，我们重点来看下chunks和cacheGroups。
+
+> chunks
+
+里面有提到initial模式下会分开优化打包异步和非异步模块。而all会把异步和非异步同时进行优化打包。
+
+> 使用cacheGroups可以自定义配置打包块。
+
+``` js
+// indexA.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import _ from 'lodash'
+import $ from 'jquery'
+
+// indexB.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import('lodash')
+import $ from 'jquery'
+
+// webpack.config.js
+optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          name: 'commons',
+          chunks: 'initial',
+          minChunks: 2
+        }
+      }
+    }
+  }
+```
+
+上面已经提到了设置chunks: initial || all都可以提取出第三方库。但是它是把所有第三库提取出来，所以我们在只提取react和react-dom的情况下，需要自定义一个cacheGroup。
+
+```js
+// indexA.js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import _ from 'lodash'
+import $ from 'jquery'
+
+// webpack.config.js
+entry: {
+    indexA: path.join(__dirname, 'src/indexA.js')
+},
+optimization: {
+    splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+            vendors: {
+                test: /react/,
+                name: 'vendors'
+            }
+        }
+    }
+}
+```
+
+我们去重写了vendors打包块，只打包匹配react的模块，所以达到了之前CommonsChunkPlugin的功能。
+
+或者
+
+``` js
+// index.jsx
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+// webpack.config.js
+entry: {
+    indexA: path.join(__dirname, 'src/indexA.js'),
+    vendor: ["react", "react-dom"]
+},
+optimization: {
+    splitChunks: {
+        cacheGroups: {
+            vendor: {
+                name: "vendor",
+                chunks: "initial"
+            }
+        }
+    }
+}
+```
+
+webpack 打包入口增加一个vendor入口，里面包括所有需要另外打包出来的库，然后在cacheGroups设置这个打包块chunks: initial || all，也能把indexA和vendor中重复的库提取到vendor打包块中。
