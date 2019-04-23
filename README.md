@@ -147,3 +147,26 @@ module.rules: [
   }
 ]
 ```
+
+### bundle 分析(bundle analysis)
+
+Install
+
+```js
+# NPM
+npm install --save-dev webpack-bundle-analyzer
+# Yarn
+yarn add -D webpack-bundle-analyzer
+```
+
+Usage (as a plugin)
+
+```js
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
+module.exports = {
+  plugins: [
+    new BundleAnalyzerPlugin()
+  ]
+}
+```

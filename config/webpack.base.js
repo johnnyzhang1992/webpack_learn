@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 //  __webpack_public_path__ = 'myRuntimePublicPath
 module.exports = {
@@ -12,6 +13,25 @@ module.exports = {
         filename: '[name].[hash].js',
         path: path.resolve(__dirname,'../dist'),
         // publicPath: "http://cdn.example.com/assets/[hash]/"
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'async',
+            minSize: 10000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            automaticNameDelimiter: '~',
+            name: true,
+            // 公共模块被打包进了commons
+            cacheGroups: {
+                 commons: {
+                     name: 'commons',
+                     chunks: 'all',
+                     minChunks: 2
+                 }
+            }
+        }     
     },
     module: {
         rules:[
@@ -55,8 +75,5 @@ module.exports = {
             chunksSortMode: 'auto',
             // favicon: ''
         })
-        // The title to use for the generated HTML document. 
-        // 用于自动生成的默认 html,对指定 template 的无效果
-        // new HtmlWebpackPlugin({title: 'Webpack 项目搭建学习'})
     ]
 }

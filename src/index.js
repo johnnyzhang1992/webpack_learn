@@ -1,11 +1,13 @@
 import "./style.css"
 import imgUrl from "./img.png"
-import { cube} from '../untils/math'
+import { cube } from '../untils/math';
+import _ from 'lodash';
+console.log(_.join(['Another','name']))
 // import Styles from 'style-loader!css-loader?modules!./styles.css';
 // 创建组件
 function createComponent(){
     var element = document.createElement('div');
-    element.innerHTML = `5 is equal to ${cube(5)}`;
+    element.innerHTML = `5 cube is equal to ${cube(5)} ！`;
     return element; 
 }
 // 创建图片元素
