@@ -26,7 +26,7 @@
 		"*.css"
 	],
 	"dependencies": {
-		"lodash": "^4.17.11",
+		"lodash": "^4.17.14",
 		"webpack-manifest-plugin": "^2.0.4"
 	}
 }
